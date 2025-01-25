@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steerda Special Account</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        .container {
+            width: 80%;
+            margin: 50px auto;
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 8px;
+            color: #444;
+            font-size: 16px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-top: 5px;
+        }
+        .form-group input:focus {
+            border-color: #007bff;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .button-container button {
+            padding: 12px 24px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            width: 100%;
+        }
+        .button-container button:hover {
+            background-color: #218838;
+        }
+    </style>
+    <!-- Adding jsPDF library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Enter Information to Generate Your Account</h1>
+
+        <div class="form-group">
+            <label for="personalId">Personal ID (9 Digits):</label>
+            <input type="text" id="personalId" placeholder="Enter a 9-digit personal ID" maxlength="9" oninput="generateInfo()" />
+        </div>
+
+        <div class="form-group">
+            <label for="fullName">Your Full Name in English:</label>
+            <input type="text" id="fullName" placeholder="Enter your full name in English" oninput="generateInfo()" />
+        </div>
+
+        <div class="form-group">
+            <label for="birthDate">Date of Birth:</label>
+            <input type="date" id="birthDate" oninput="generateInfo()" />
+        </div>
+
+        <div class="form-group">
+            <label for="idExpirationDate">ID Expiration Date:</label>
+            <input type="date" id="idExpirationDate" oninput="generateInfo()" />
+        </div>
+
+        <!-- Submit button to display information -->
+        <div class="button-container">
+            <button onclick="saveInfo()">Submit</button>
+        </div>
+
+        <!-- Download as PDF button -->
+        <div class="button-container">
+            <button onclick="downloadPDF()">Download as PDF</button>
+        </div>
+
+        <div id="resultContainer" class="result-container"></div>
+    </div>
+
+    <script>
+        let userData = {};
+
+        function generateInfo() {
+            var personalId = document.getElementById("personalId").value;
+            var fullName = document.getElementById("fullName").value;
+            var birthDate = document.getElementById("birthDate").value;
+            var idExpirationDate = document.getElementById("idExpirationDate").value;
+
+            if (personalId.length !== 9 || isNaN(personalId)) {
+                return;
+            }
+
+            if (!fullName || !birthDate || !idExpirationDate) {
+                return;
+            }
+
+            var customCode = fullName.charAt(0).toUpperCase() + fullName.split(" ")[1].charAt(0).toUpperCase() +
+                             birthDate.slice(5,7) + idExpirationDate.slice(5,7);
+
+            var primaryId = "ID ONE: " + fullName.charAt(0).toUpperCase() + birthDate.slice(5,7) + idExpirationDate.slice(-2);
+            var secondaryId = "ID TWO: " + birthDate.slice(8,10) + fullName.charAt(1).toUpperCase() + idExpirationDate.slice(2,4);
+
+            userData[personalId] = {
+                fullName: fullName,
+                birthDate: birthDate,
+                idExpirationDate: idExpirationDate,
+                customCode: customCode,
+                primaryId: primaryId,
+                secondaryId: secondaryId
+            };
+        }
+
+        function saveInfo() {
+            var personalId = document.getElementById("personalId").value;
+            if (userData[personalId]) {
+                var resultContainer = document.getElementById("resultContainer");
+
+                var resultHTML = `
+                    <div style="text-align:center; font-size: 24px; color: #007bff;">
+                        <h2>Account Information</h2>
+                        <p><span style="font-size: 20px; color: #444;">Full Name:</span> <span style="font-size: 20px; color: #28a745;">${userData[personalId].fullName}</span></p>
+                        <p><span style="font-size: 20px; color: #444;">Date of Birth:</span> <span style="font-size: 20px; color: #ff6347;">${userData[personalId].birthDate}</span></p>
+                        <p><span style="font-size: 20px; color: #444;">ID Expiration Date:</span> <span style="font-size: 20px; color: #ffc107;">${userData[personalId].idExpirationDate}</span></p>
+                        <p><span style="font-size: 20px; color: #444;">Steerda Code:</span> <span style="font-size: 20px; color: #007bff;">${userData[personalId].customCode}</span></p>
+                        <p><span style="font-size: 20px; color: #444;">${userData[personalId].primaryId}</span></p>
+                        <p><span style="font-size: 20px; color: #444;">${userData[personalId].secondaryId}</span></p>
+                    </div>
+                `;
+                resultContainer.innerHTML = resultHTML;
+            } else {
+                alert("Please enter a valid personal ID.");
+            }
+        }
+
+        function downloadPDF() {
+            var personalId = document.getElementById("personalId").value;
+            if (userData[personalId]) {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                
+                // Add title and other information with different colors
+                doc.setFontSize(24);
+                doc.setTextColor(0, 123, 255); // Blue for title
+                doc.text("Account Information", 20, 20);
+                
+                doc.setFontSize(16);
+                doc.setTextColor(72, 72, 72); // Gray for labels
+                doc.text("Full Name: ", 20, 40);
+                doc.setTextColor(40, 167, 69); // Green for data
+                doc.text(userData[personalId].fullName, 70, 40);
+                
+                doc.setTextColor(72, 72, 72);
+                doc.text("Date of Birth: ", 20, 60);
+                doc.setTextColor(255, 99, 71); // Red for data
+                doc.text(userData[personalId].birthDate, 70, 60);
+                
+                doc.setTextColor(72, 72, 72);
+                doc.text("ID Expiration Date: ", 20, 80);
+                doc.setTextColor(255, 193, 7); // Yellow for data
+                doc.text(userData[personalId].idExpirationDate, 100, 80);
+                
+                doc.setTextColor(72, 72, 72);
+                doc.text("Steerda Code: ", 20, 100);
+                doc.setTextColor(0, 123, 255); // Blue for data
+                doc.text(userData[personalId].customCode, 70, 100);
+                
+                doc.setTextColor(72, 72, 72);
+                doc.text(userData[personalId].primaryId, 20, 120);
+                doc.text(userData[personalId].secondaryId, 20, 140);
+                
+                doc.save('account_information.pdf');
+            } else {
+                alert("Please enter a valid personal ID.");
+            }
+        }
+    </script>
+
+</body>
+</html>
