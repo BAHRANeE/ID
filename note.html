@@ -87,6 +87,27 @@
         .back-button:hover {
             background-color: #dcdcdc;
         }
+        .note-item {
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .delete-btn {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .delete-btn:hover {
+            background-color: #d32f2f;
+        }
     </style>
 </head>
 <body>
@@ -103,6 +124,9 @@
     <div id="registration-form" style="display: none;">
         <h3>تسجيل حساب جديد</h3>
         <form id="register-form">
+            <label for="full-name">الاسم الكامل:</label>
+            <input type="text" id="full-name" required placeholder="أدخل اسمك الكامل">
+            
             <label for="username">اسم المستخدم:</label>
             <input type="text" id="username" required placeholder="أدخل اسم المستخدم">
             
@@ -150,12 +174,18 @@
     <div id="notes-section" style="display: none;">
         <h3>ملاحظاتك</h3>
         <textarea id="user-notes" rows="4" placeholder="اكتب ملاحظاتك هنا..."></textarea>
-        <button type="button" onclick="saveNotes()">حفظ الملاحظات</button>
+        <button type="button" onclick="saveNote()">حفظ الملاحظة</button>
+
+        <div id="notes-list">
+            <!-- سيتم إضافة الملاحظات هنا -->
+        </div>
+
         <button type="button" class="back-button" onclick="goBack()">الرجوع</button>
     </div>
 </div>
 
 <script>
+    let users = JSON.parse(localStorage.getItem('users')) || [];
     let currentUser = null;
 
     function togglePasswordVisibility() {
@@ -190,6 +220,7 @@
     document.getElementById('register-form').addEventListener('submit', function(e) {
         e.preventDefault();
 
+        const fullName = document.getElementById('full-name').value;
         const username = document.getElementById('username').value;
         const password = document.getElementById('password').value;
         const confirmPassword = document.getElementById('confirmPassword').value;
@@ -199,12 +230,16 @@
             return;
         }
 
-        currentUser = {
-            username,
-            password
-        };
+        // تحقق من أن اسم المستخدم غير مكرر
+        if (users.some(user => user.username === username)) {
+            alert("اسم المستخدم موجود بالفعل!");
+            return;
+        }
 
-        localStorage.setItem('userInfo', JSON.stringify(currentUser));
+        const newUser = { fullName, username, password };
+        users.push(newUser);
+        localStorage.setItem('users', JSON.stringify(users));
+
         alert("تم التسجيل بنجاح!");
         goBack();
     });
@@ -216,12 +251,14 @@
         const username = document.getElementById('login-username').value;
         const password = document.getElementById('login-password').value;
 
-        const savedUser = JSON.parse(localStorage.getItem('userInfo'));
+        const user = users.find(user => user.username === username && user.password === password);
 
-        if (savedUser && savedUser.username === username && savedUser.password === password) {
+        if (user) {
             alert("تم تسجيل الدخول بنجاح!");
+            currentUser = user;
             document.getElementById('login-section').style.display = 'none';
             document.getElementById('notes-section').style.display = 'block';
+            loadNotes();
         } else {
             alert("البيانات غير صحيحة!");
         }
@@ -233,19 +270,52 @@
 
         const forgotUsername = document.getElementById('forgot-username').value;
 
-        const savedUser = JSON.parse(localStorage.getItem('userInfo'));
+        const user = users.find(user => user.username === forgotUsername);
 
-        if (savedUser && savedUser.username === forgotUsername) {
-            alert("تم استرجاع كلمة المرور بنجاح! كلمة المرور هي: " + savedUser.password);
+        if (user) {
+            alert("تم استرجاع كلمة المرور بنجاح! كلمة المرور هي: " + user.password);
         } else {
-            alert("البيانات غير صحيحة!");
+            alert("اسم المستخدم غير موجود!");
         }
     });
 
-    function saveNotes() {
-        const notes = document.getElementById('user-notes').value;
-        alert("تم حفظ ملاحظاتك!");
-        console.log("الملاحظات: ", notes); // يمكنك تخزين الملاحظات في قاعدة بيانات أو في التخزين المحلي
+    function saveNote() {
+        const noteContent = document.getElementById('user-notes').value;
+
+        if (noteContent.trim() === "") {
+            alert("يرجى كتابة ملاحظة!");
+            return;
+        }
+
+        let notes = JSON.parse(localStorage.getItem('notes')) || [];
+        notes.push(noteContent);
+        localStorage.setItem('notes', JSON.stringify(notes));
+
+        document.getElementById('user-notes').value = ""; // مسح النص بعد الحفظ
+        loadNotes();
+    }
+
+    function loadNotes() {
+        const notes = JSON.parse(localStorage.getItem('notes')) || [];
+        const notesList = document.getElementById('notes-list');
+        notesList.innerHTML = ""; // مسح القائمة الحالية قبل إعادة التحميل
+
+        notes.forEach((note, index) => {
+            const noteItem = document.createElement('div');
+            noteItem.className = 'note-item';
+            noteItem.innerHTML = `
+                <span>${note}</span>
+                <button class="delete-btn" onclick="deleteNote(${index})">حذف</button>
+            `;
+            notesList.appendChild(noteItem);
+        });
+    }
+
+    function deleteNote(index) {
+        let notes = JSON.parse(localStorage.getItem('notes')) || [];
+        notes.splice(index, 1);
+        localStorage.setItem('notes', JSON.stringify(notes));
+        loadNotes();
     }
 </script>
 
