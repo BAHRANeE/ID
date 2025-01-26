@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="siteTitle">ملاحظتك في أمان</title>
+    <title>تسجيل الدخول - ستيردا</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #f7f7f7;
+            background-color: #f2f2f2;
             margin: 0;
             padding: 0;
             direction: rtl;
@@ -22,18 +22,26 @@
             border-radius: 12px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-        h1, h3 {
+        h1 {
             text-align: center;
             color: #2C6D2F;
             font-size: 28px;
         }
-        input[type="text"], input[type="password"], input[type="date"], input[type="number"] {
+        h3 {
+            color: #2C6D2F;
+        }
+        input[type="text"], input[type="number"], input[type="date"], input[type="password"] {
             width: 100%;
             padding: 12px;
             margin: 12px 0;
             border: 1px solid #ccc;
             border-radius: 8px;
             box-sizing: border-box;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        input[type="text"]:focus, input[type="number"]:focus, input[type="date"]:focus, input[type="password"]:focus {
+            border: 1px solid #4CAF50;
         }
         button {
             width: 100%;
@@ -49,229 +57,321 @@
         button:hover {
             background-color: #3C8E3A;
         }
-        .language-switcher {
-            margin-bottom: 20px;
-        }
-        .language-switcher select {
-            padding: 10px;
-            font-size: 16px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-        }
-        .privacy-note {
-            font-size: 14px;
-            color: #333;
-            margin-top: 10px;
+        .error {
+            color: red;
             text-align: center;
+            font-size: 16px;
+            margin-top: 10px;
         }
-        .form-group {
-            margin-bottom: 20px;
+        .instructions-box {
+            background-color: #eaf5e4;
+            border: 1px solid #d6f1d2;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        .toggle-password {
+            cursor: pointer;
+            position: absolute;
+            top: 12px;
+            right: 10px;
+        }
+        .forgot-password-link {
+            text-align: center;
+            margin-top: 15px;
+        }
+        .notes-section {
+            margin-top: 30px;
+        }
+        .notes-list {
+            list-style: none;
+            padding: 0;
+        }
+        .note-item {
+            background-color: #f7f7f7;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        .note-item button {
+            margin-top: 5px;
+            background-color: #f44336;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 5px;
+        }
+        .note-item button:hover {
+            background-color: #d32f2f;
+        }
+        .input-group {
+            position: relative;
+        }
+        .step-btn {
+            display: inline-block;
+            margin: 10px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .step-btn:hover {
+            background-color: #45a049;
+        }
+        .info-box {
+            background-color: #f4f7f5;
+            border: 1px solid #c8e1c8;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .info-box p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        .back-button {
+            display: block;
+            width: 100%;
+            margin-top: 20px;
+            background-color: #e9e9e9;
+            border: 1px solid #ccc;
+            padding: 12px;
+            border-radius: 8px;
+            color: #333;
+            cursor: pointer;
+        }
+        .back-button:hover {
+            background-color: #dcdcdc;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="language-switcher">
-        <select id="languageSelector">
-            <option value="ar">العربية</option>
-            <option value="en">English</option>
-            <option value="fr">Français</option>
-            <option value="de">Deutsch</option>
-            <option value="es">Español</option>
-            <option value="it">Italiano</option>
-            <option value="pt">Português</option>
-            <option value="ru">Русский</option>
-            <option value="zh">中文</option>
-            <option value="ja">日本語</option>
-            <option value="ko">한국어</option>
-            <option value="hi">हिंदी</option>
-            <option value="bn">বাংলা</option>
-            <option value="tr">Türkçe</option>
-            <option value="fa">فارسی</option>
-            <option value="ur">اردو</option>
-        </select>
+    <h1>تسجيل الدخول - ستيردا</h1>
+
+    <!-- منطقة التعليمات -->
+    <div class="instructions-box">
+        <h3>تعليمات الاستخدام:</h3>
+        <p>1. في الصفحة الأولى، يمكنك اختيار التسجيل أو الدخول إلى حسابك.</p>
+        <p>2. إذا كنت تسجل لأول مرة، أدخل كافة البيانات المطلوبة مثل الرقم الشخصي، الاسم، تاريخ الميلاد، وكلمة المرور.</p>
+        <p>3. تأكد من إدخال كلمة المرور عند التسجيل، فهي ضرورية للولوج إلى حسابك.</p>
+        <p>4. في حال نسيان كلمة المرور، يمكنك استرجاعها باستخدام الرقم الشخصي واسم المستخدم.</p>
+        <p>5. بعد تسجيل الدخول، يمكنك إضافة ملاحظاتك وحذفها، وكذلك إدارة حسابك بشكل كامل.</p>
+        <p>6. لا تستخدم معلومات شخصية غير دقيقة عند التسجيل؛ تأكد من أن كافة البيانات صحيحة.</p>
+        <p>7. كلمة المرور يجب أن تحتوي على أحرف كبيرة وصغيرة وأرقام لتعزيز الأمان.</p>
+        <p>8. قم بتسجيل الخروج عند الانتهاء من استخدام الموقع لتأمين حسابك.</p>
     </div>
 
-    <h1 id="siteTitle">ملاحظتك في أمان</h1>
-
-    <div id="register-section">
-        <button id="register-btn" onclick="showRegistrationForm()">تسجيل جديد</button>
-        <button id="login-btn" onclick="showLoginForm()">الدخول إلى الحساب</button>
+    <div id="login-section">
+        <button id="register-btn">تسجيل جديد</button>
+        <button id="login-btn">الدخول إلى الحساب</button>
     </div>
 
     <div id="registration-form" style="display: none;">
-        <h3 id="registrationTitle">تسجيل حساب جديد</h3>
+        <h3>تسجيل حساب جديد</h3>
         <form id="register-form">
-            <div class="form-group">
-                <label for="idNumber" id="idLabel">الرقم الشخصي (9 أرقام):</label>
-                <input type="number" id="idNumber" required placeholder="أدخل الرقم الشخصي" min="100000000" max="999999999">
-            </div>
-            <div class="form-group">
-                <label for="nameEnglish" id="nameLabel">الاسم باللغة الإنجليزية:</label>
-                <input type="text" id="nameEnglish" required placeholder="أدخل اسمك بالإنجليزية">
-            </div>
-            <div class="form-group">
-                <label for="dob" id="dobLabel">تاريخ الميلاد:</label>
-                <input type="date" id="dob" required>
-            </div>
-            <div class="form-group">
-                <label for="expiryDate" id="expiryDateLabel">تاريخ انتهاء صلاحية البطاقة الشخصية:</label>
-                <input type="date" id="expiryDate" required>
-            </div>
-            <div class="form-group">
-                <label for="password" id="passwordLabel">كلمة المرور:</label>
+            <label for="idNumber">الرقم الشخصي (9 أرقام):</label>
+            <input type="number" id="idNumber" required placeholder="أدخل الرقم الشخصي" min="100000000" max="999999999">
+            
+            <label for="nameEnglish">الاسم باللغة الإنجليزية:</label>
+            <input type="text" id="nameEnglish" required placeholder="أدخل اسمك بالإنجليزية">
+            
+            <label for="dob">تاريخ الميلاد:</label>
+            <input type="date" id="dob" required>
+            
+            <label for="expiryDate">تاريخ انتهاء صلاحية البطاقة الشخصية:</label>
+            <input type="date" id="expiryDate" required>
+            
+            <label for="username">اسم المستخدم:</label>
+            <input type="text" id="username" required placeholder="أدخل اسم المستخدم">
+            
+            <div class="input-group">
+                <label for="password">كلمة المرور:</label>
                 <input type="password" id="password" required placeholder="أدخل كلمة المرور">
+                <span class="toggle-password" onclick="togglePasswordVisibility()">👁️</span>
             </div>
-            <div class="form-group">
-                <label for="confirmPassword" id="confirmPasswordLabel">تأكيد كلمة المرور:</label>
-                <input type="password" id="confirmPassword" required placeholder="أعد إدخال كلمة المرور">
-            </div>
-            <button type="submit" id="registerBtn">تسجيل</button>
+            
+            <button type="submit">تسجيل</button>
+            <button type="button" class="back-button" onclick="goBack()">الرجوع</button>
         </form>
     </div>
 
     <div id="login-form" style="display: none;">
-        <h3 id="loginTitle">تسجيل الدخول</h3>
+        <h3>تسجيل الدخول</h3>
         <form id="login-form-actual">
-            <div class="form-group">
-                <label for="login-idNumber" id="loginIdLabel">الرقم الشخصي:</label>
-                <input type="text" id="login-idNumber" required placeholder="أدخل الرقم الشخصي">
-            </div>
-            <div class="form-group">
-                <label for="login-password" id="loginPasswordLabel">كلمة المرور:</label>
-                <input type="password" id="login-password" required placeholder="أدخل كلمة المرور">
-            </div>
-            <button type="submit" id="loginBtn">دخول</button>
-            <p class="forgot-password-link">
-                <a href="#" onclick="showForgotPasswordForm()">نسيت كلمة المرور؟</a>
-            </p>
+            <label for="login-idNumber">الرقم الشخصي (9 أرقام):</label>
+            <input type="number" id="login-idNumber" required placeholder="أدخل الرقم الشخصي">
+            
+            <label for="login-username">اسم المستخدم:</label>
+            <input type="text" id="login-username" required placeholder="أدخل اسم المستخدم">
+            
+            <label for="login-password">كلمة المرور:</label>
+            <input type="password" id="login-password" required placeholder="أدخل كلمة المرور">
+            <span class="toggle-password" onclick="togglePasswordVisibility()">👁️</span>
+            
+            <button type="submit">دخول</button>
+            <button type="button" class="forgot-password-link" onclick="forgotPassword()">نسيت كلمة المرور؟</button>
+            <button type="button" class="back-button" onclick="goBack()">الرجوع</button>
         </form>
     </div>
 
     <div id="forgot-password-form" style="display: none;">
-        <h3 id="forgotPasswordTitle">استرجاع كلمة المرور</h3>
+        <h3>استرجاع كلمة المرور</h3>
         <form id="forgot-password-form-submit">
-            <div class="form-group">
-                <label for="forgot-idNumber" id="forgotIdLabel">الرقم الشخصي:</label>
-                <input type="text" id="forgot-idNumber" required placeholder="أدخل الرقم الشخصي">
-            </div>
-            <div class="form-group">
-                <label for="forgot-name" id="forgotNameLabel">الاسم:</label>
-                <input type="text" id="forgot-name" required placeholder="أدخل اسمك">
-            </div>
-            <button type="submit" id="forgotBtn">استرجاع كلمة المرور</button>
+            <label for="forgot-idNumber">الرقم الشخصي:</label>
+            <input type="number" id="forgot-idNumber" required placeholder="أدخل الرقم الشخصي">
+            
+            <label for="forgot-username">اسم المستخدم:</label>
+            <input type="text" id="forgot-username" required placeholder="أدخل اسم المستخدم">
+            
+            <button type="submit">استرجاع كلمة المرور</button>
+            <button type="button" class="back-button" onclick="goBack()">الرجوع</button>
         </form>
     </div>
 
-    <div class="privacy-note">
-        <p id="privacyMessage">نحن نأخذ خصوصيتك على محمل الجد، جميع بياناتك محفوظة بشكل آمن.</p>
+    <div id="notes-section" style="display: none;">
+        <h3>إدارة الملاحظات</h3>
+        <textarea id="newNote" placeholder="أضف ملاحظة جديدة..." rows="4" style="width: 100%;"></textarea>
+        <button id="addNoteBtn">إضافة ملاحظة</button>
+        <ul id="notesList" class="notes-list"></ul>
+        <button type="button" class="back-button" onclick="goBack()">الرجوع</button>
     </div>
 </div>
 
 <script>
-    // Language Data
-    const languageData = {
-        "ar": {
-            "siteTitle": "ملاحظتك في أمان",
-            "register-btn": "تسجيل جديد",
-            "login-btn": "الدخول إلى الحساب",
-            "registrationTitle": "تسجيل حساب جديد",
-            "idLabel": "الرقم الشخصي (9 أرقام):",
-            "nameLabel": "الاسم باللغة الإنجليزية:",
-            "dobLabel": "تاريخ الميلاد:",
-            "expiryDateLabel": "تاريخ انتهاء صلاحية البطاقة الشخصية:",
-            "passwordLabel": "كلمة المرور:",
-            "confirmPasswordLabel": "تأكيد كلمة المرور:",
-            "registerBtn": "تسجيل",
-            "loginTitle": "تسجيل الدخول",
-            "loginIdLabel": "الرقم الشخصي:",
-            "loginPasswordLabel": "كلمة المرور:",
-            "loginBtn": "دخول",
-            "forgotPasswordLink": "نسيت كلمة المرور؟",
-            "forgotPasswordTitle": "استرجاع كلمة المرور",
-            "forgotIdLabel": "الرقم الشخصي:",
-            "forgotNameLabel": "الاسم:",
-            "forgotBtn": "استرجاع كلمة المرور",
-            "privacyMessage": "نحن نأخذ خصوصيتك على محمل الجد، جميع بياناتك محفوظة بشكل آمن."
-        },
-        "en": {
-            "siteTitle": "Your Note is Safe",
-            "register-btn": "Register",
-            "login-btn": "Login",
-            "registrationTitle": "Register New Account",
-            "idLabel": "Personal ID (9 Digits):",
-            "nameLabel": "Name in English:",
-            "dobLabel": "Date of Birth:",
-            "expiryDateLabel": "ID Expiry Date:",
-            "passwordLabel": "Password:",
-            "confirmPasswordLabel": "Confirm Password:",
-            "registerBtn": "Register",
-            "loginTitle": "Login",
-            "loginIdLabel": "Personal ID:",
-            "loginPasswordLabel": "Password:",
-            "loginBtn": "Login",
-            "forgotPasswordLink": "Forgot Password?",
-            "forgotPasswordTitle": "Retrieve Password",
-            "forgotIdLabel": "Personal ID:",
-            "forgotNameLabel": "Name:",
-            "forgotBtn": "Retrieve Password",
-            "privacyMessage": "We take your privacy seriously, all your data is securely stored."
-        }
-    };
+    let userNotes = [];
+    let currentUser = null;
 
-    // Load language dynamically
-    function loadLanguage(language) {
-        const data = languageData[language];
-        document.getElementById("siteTitle").innerText = data.siteTitle;
-        document.getElementById("register-btn").innerText = data["register-btn"];
-        document.getElementById("login-btn").innerText = data["login-btn"];
-        document.getElementById("registrationTitle").innerText = data.registrationTitle;
-        document.getElementById("idLabel").innerText = data.idLabel;
-        document.getElementById("nameLabel").innerText = data.nameLabel;
-        document.getElementById("dobLabel").innerText = data.dobLabel;
-        document.getElementById("expiryDateLabel").innerText = data.expiryDateLabel;
-        document.getElementById("passwordLabel").innerText = data.passwordLabel;
-        document.getElementById("confirmPasswordLabel").innerText = data.confirmPasswordLabel;
-        document.getElementById("registerBtn").innerText = data.registerBtn;
-        document.getElementById("loginTitle").innerText = data.loginTitle;
-        document.getElementById("loginIdLabel").innerText = data.loginIdLabel;
-        document.getElementById("loginPasswordLabel").innerText = data.loginPasswordLabel;
-        document.getElementById("loginBtn").innerText = data.loginBtn;
-        document.getElementById("forgotPasswordLink").innerText = data.forgotPasswordLink;
-        document.getElementById("forgotPasswordTitle").innerText = data.forgotPasswordTitle;
-        document.getElementById("forgotIdLabel").innerText = data.forgotIdLabel;
-        document.getElementById("forgotNameLabel").innerText = data.forgotNameLabel;
-        document.getElementById("forgotBtn").innerText = data.forgotBtn;
-        document.getElementById("privacyMessage").innerText = data.privacyMessage;
+    function togglePasswordVisibility() {
+        const passwordField = document.getElementById('password');
+        const loginPasswordField = document.getElementById('login-password');
+        const type = passwordField.type === 'password' ? 'text' : 'password';
+        passwordField.type = type;
+        loginPasswordField.type = type;
     }
 
-    // Handle language change
-    document.getElementById('languageSelector').addEventListener('change', function(e) {
-        const language = e.target.value;
-        loadLanguage(language);
+    function goBack() {
+        document.getElementById('registration-form').style.display = 'none';
+        document.getElementById('login-form').style.display = 'none';
+        document.getElementById('forgot-password-form').style.display = 'none';
+        document.getElementById('notes-section').style.display = 'none';
+        document.getElementById('login-section').style.display = 'block';
+    }
+
+    document.getElementById('register-btn').addEventListener('click', function() {
+        document.getElementById('login-section').style.display = 'none';
+        document.getElementById('registration-form').style.display = 'block';
     });
 
-    // Show registration form
-    function showRegistrationForm() {
-        document.getElementById("register-section").style.display = "none";
-        document.getElementById("registration-form").style.display = "block";
+    document.getElementById('login-btn').addEventListener('click', function() {
+        document.getElementById('login-section').style.display = 'none';
+        document.getElementById('login-form').style.display = 'block';
+    });
+
+    document.getElementById('register-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const idNumber = document.getElementById('idNumber').value;
+        const name = document.getElementById('nameEnglish').value;
+        const dob = document.getElementById('dob').value;
+        const expiryDate = document.getElementById('expiryDate').value;
+        const password = document.getElementById('password').value;
+        const username = document.getElementById('username').value;
+
+        if (!password) {
+            alert("يرجى إدخال كلمة المرور!");
+            return;
+        }
+
+        if (idNumber.length === 9) {
+            currentUser = {
+                idNumber,
+                name,
+                dob,
+                expiryDate,
+                password,
+                username
+            };
+
+            localStorage.setItem('userInfo', JSON.stringify(currentUser));
+            alert("تم التسجيل بنجاح!");
+            goBack();
+        } else {
+            alert("رقم الهوية يجب أن يتكون من 9 أرقام!");
+        }
+    });
+
+    document.getElementById('login-form-actual').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const idNumber = document.getElementById('login-idNumber').value;
+        const username = document.getElementById('login-username').value;
+        const password = document.getElementById('login-password').value;
+
+        const savedUser = JSON.parse(localStorage.getItem('userInfo'));
+
+        if (savedUser && savedUser.idNumber === idNumber && savedUser.username === username && savedUser.password === password) {
+            alert("تم تسجيل الدخول بنجاح!");
+            document.getElementById('login-form').style.display = 'none';
+            document.getElementById('notes-section').style.display = 'block';
+            loadNotes();
+        } else {
+            alert("البيانات غير صحيحة!");
+        }
+    });
+
+    document.getElementById('forgot-password-form-submit').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const forgotIdNumber = document.getElementById('forgot-idNumber').value;
+        const forgotUsername = document.getElementById('forgot-username').value;
+
+        const savedUser = JSON.parse(localStorage.getItem('userInfo'));
+
+        if (savedUser && savedUser.idNumber === forgotIdNumber && savedUser.username === forgotUsername) {
+            alert("تم استرجاع كلمة المرور بنجاح! كلمة المرور هي: " + savedUser.password);
+        } else {
+            alert("البيانات غير صحيحة!");
+        }
+    });
+
+    function loadNotes() {
+        const notesList = document.getElementById('notesList');
+        notesList.innerHTML = '';
+
+        userNotes.forEach(function(note, index) {
+            const noteItem = document.createElement('li');
+            noteItem.classList.add('note-item');
+            noteItem.innerHTML = `
+                <p>${note}</p>
+                <button onclick="deleteNote(${index})">حذف</button>
+            `;
+            notesList.appendChild(noteItem);
+        });
     }
 
-    // Show login form
-    function showLoginForm() {
-        document.getElementById("register-section").style.display = "none";
-        document.getElementById("login-form").style.display = "block";
-    }
+    document.getElementById('addNoteBtn').addEventListener('click', function() {
+        const newNote = document.getElementById('newNote').value;
+        if (newNote) {
+            userNotes.push(newNote);
+            localStorage.setItem('userNotes', JSON.stringify(userNotes));
+            loadNotes();
+            document.getElementById('newNote').value = '';
+        } else {
+            alert("يرجى كتابة ملاحظة!");
+        }
+    });
 
-    // Show forgot password form
-    function showForgotPasswordForm() {
-        document.getElementById("login-form").style.display = "none";
-        document.getElementById("forgot-password-form").style.display = "block";
+    function deleteNote(index) {
+        userNotes.splice(index, 1);
+        localStorage.setItem('userNotes', JSON.stringify(userNotes));
+        loadNotes();
     }
-
-    // Initialize language (default is Arabic)
-    loadLanguage("ar");
 </script>
 
 </body>
