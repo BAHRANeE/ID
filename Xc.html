@@ -44,6 +44,7 @@
             border-radius: 8px;
             font-size: 18px;
             cursor: pointer;
+            transition: background-color 0.3s;
         }
         button:hover {
             background-color: #3C8E3A;
@@ -250,6 +251,24 @@
         const language = e.target.value;
         loadLanguage(language);
     });
+
+    // Show registration form
+    function showRegistrationForm() {
+        document.getElementById("register-section").style.display = "none";
+        document.getElementById("registration-form").style.display = "block";
+    }
+
+    // Show login form
+    function showLoginForm() {
+        document.getElementById("register-section").style.display = "none";
+        document.getElementById("login-form").style.display = "block";
+    }
+
+    // Show forgot password form
+    function showForgotPasswordForm() {
+        document.getElementById("login-form").style.display = "none";
+        document.getElementById("forgot-password-form").style.display = "block";
+    }
 
     // Initialize language (default is Arabic)
     loadLanguage("ar");
