@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #f2f2f2;
+            background-color: #f7f7f7;
             margin: 0;
             padding: 0;
             direction: rtl;
@@ -63,6 +63,9 @@
             margin-top: 10px;
             text-align: center;
         }
+        .form-group {
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
@@ -91,36 +94,38 @@
 
     <h1 id="siteTitle">ملاحظتك في أمان</h1>
 
-    <div id="login-section">
-        <button id="register-btn">تسجيل جديد</button>
-        <button id="login-btn">الدخول إلى الحساب</button>
+    <div id="register-section">
+        <button id="register-btn" onclick="showRegistrationForm()">تسجيل جديد</button>
+        <button id="login-btn" onclick="showLoginForm()">الدخول إلى الحساب</button>
     </div>
 
     <div id="registration-form" style="display: none;">
         <h3 id="registrationTitle">تسجيل حساب جديد</h3>
         <form id="register-form">
-            <label for="idNumber" id="idLabel">الرقم الشخصي (9 أرقام):</label>
-            <input type="number" id="idNumber" required placeholder="أدخل الرقم الشخصي" min="100000000" max="999999999">
-            
-            <label for="nameEnglish" id="nameLabel">الاسم باللغة الإنجليزية:</label>
-            <input type="text" id="nameEnglish" required placeholder="أدخل اسمك بالإنجليزية">
-            
-            <label for="dob" id="dobLabel">تاريخ الميلاد:</label>
-            <input type="date" id="dob" required>
-            
-            <label for="expiryDate" id="expiryDateLabel">تاريخ انتهاء صلاحية البطاقة الشخصية:</label>
-            <input type="date" id="expiryDate" required>
-            
-            <div class="input-group">
+            <div class="form-group">
+                <label for="idNumber" id="idLabel">الرقم الشخصي (9 أرقام):</label>
+                <input type="number" id="idNumber" required placeholder="أدخل الرقم الشخصي" min="100000000" max="999999999">
+            </div>
+            <div class="form-group">
+                <label for="nameEnglish" id="nameLabel">الاسم باللغة الإنجليزية:</label>
+                <input type="text" id="nameEnglish" required placeholder="أدخل اسمك بالإنجليزية">
+            </div>
+            <div class="form-group">
+                <label for="dob" id="dobLabel">تاريخ الميلاد:</label>
+                <input type="date" id="dob" required>
+            </div>
+            <div class="form-group">
+                <label for="expiryDate" id="expiryDateLabel">تاريخ انتهاء صلاحية البطاقة الشخصية:</label>
+                <input type="date" id="expiryDate" required>
+            </div>
+            <div class="form-group">
                 <label for="password" id="passwordLabel">كلمة المرور:</label>
                 <input type="password" id="password" required placeholder="أدخل كلمة المرور">
             </div>
-            
-            <div class="input-group">
+            <div class="form-group">
                 <label for="confirmPassword" id="confirmPasswordLabel">تأكيد كلمة المرور:</label>
                 <input type="password" id="confirmPassword" required placeholder="أعد إدخال كلمة المرور">
             </div>
-
             <button type="submit" id="registerBtn">تسجيل</button>
         </form>
     </div>
@@ -128,15 +133,17 @@
     <div id="login-form" style="display: none;">
         <h3 id="loginTitle">تسجيل الدخول</h3>
         <form id="login-form-actual">
-            <label for="login-idNumber" id="loginIdLabel">الرقم الشخصي:</label>
-            <input type="text" id="login-idNumber" required placeholder="أدخل الرقم الشخصي">
-            
-            <label for="login-password" id="loginPasswordLabel">كلمة المرور:</label>
-            <input type="password" id="login-password" required placeholder="أدخل كلمة المرور">
-            
+            <div class="form-group">
+                <label for="login-idNumber" id="loginIdLabel">الرقم الشخصي:</label>
+                <input type="text" id="login-idNumber" required placeholder="أدخل الرقم الشخصي">
+            </div>
+            <div class="form-group">
+                <label for="login-password" id="loginPasswordLabel">كلمة المرور:</label>
+                <input type="password" id="login-password" required placeholder="أدخل كلمة المرور">
+            </div>
             <button type="submit" id="loginBtn">دخول</button>
             <p class="forgot-password-link">
-                <a href="#" onclick="forgotPassword()">نسيت كلمة المرور؟</a>
+                <a href="#" onclick="showForgotPasswordForm()">نسيت كلمة المرور؟</a>
             </p>
         </form>
     </div>
@@ -144,12 +151,14 @@
     <div id="forgot-password-form" style="display: none;">
         <h3 id="forgotPasswordTitle">استرجاع كلمة المرور</h3>
         <form id="forgot-password-form-submit">
-            <label for="forgot-idNumber" id="forgotIdLabel">الرقم الشخصي:</label>
-            <input type="text" id="forgot-idNumber" required placeholder="أدخل الرقم الشخصي">
-            
-            <label for="forgot-name" id="forgotNameLabel">الاسم:</label>
-            <input type="text" id="forgot-name" required placeholder="أدخل اسمك">
-            
+            <div class="form-group">
+                <label for="forgot-idNumber" id="forgotIdLabel">الرقم الشخصي:</label>
+                <input type="text" id="forgot-idNumber" required placeholder="أدخل الرقم الشخصي">
+            </div>
+            <div class="form-group">
+                <label for="forgot-name" id="forgotNameLabel">الاسم:</label>
+                <input type="text" id="forgot-name" required placeholder="أدخل اسمك">
+            </div>
             <button type="submit" id="forgotBtn">استرجاع كلمة المرور</button>
         </form>
     </div>
@@ -187,10 +196,10 @@
         },
         "en": {
             "siteTitle": "Your Note is Safe",
-            "register-btn": "Register New",
+            "register-btn": "Register",
             "login-btn": "Login",
             "registrationTitle": "Register New Account",
-            "idLabel": "Personal ID (9 digits):",
+            "idLabel": "Personal ID (9 Digits):",
             "nameLabel": "Name in English:",
             "dobLabel": "Date of Birth:",
             "expiryDateLabel": "ID Expiry Date:",
@@ -207,11 +216,10 @@
             "forgotNameLabel": "Name:",
             "forgotBtn": "Retrieve Password",
             "privacyMessage": "We take your privacy seriously, all your data is securely stored."
-        },
-        // Add other languages here...
+        }
     };
 
-    // Load the selected language
+    // Load language dynamically
     function loadLanguage(language) {
         const data = languageData[language];
         document.getElementById("siteTitle").innerText = data.siteTitle;
