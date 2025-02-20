@@ -1,1 +1,35 @@
-<iframe src="https://mega.nz/embed/Y7QVhIRS#t_0W0t10ruw2SB45Z23pRQFxWeBu4437IGIyfUTYOXs" width="640" height="360" frameborder="0" allowfullscreen></iframe>
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>عرض المحتوى</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    input, button { padding: 10px; font-size: 1rem; }
+    iframe { margin-top: 20px; border: 1px solid #ccc; }
+  </style>
+</head>
+<body>
+  <h1>عرض المحتوى من الرابط</h1>
+  <form id="linkForm">
+    <input type="url" id="urlInput" placeholder="أدخل رابط المحتوى هنا" required>
+    <button type="submit">عرض</button>
+  </form>
+
+  <iframe id="contentFrame" src="" width="640" height="360" frameborder="0" allowfullscreen></iframe>
+
+  <script>
+    const form = document.getElementById('linkForm');
+    const urlInput = document.getElementById('urlInput');
+    const contentFrame = document.getElementById('contentFrame');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const url = urlInput.value;
+      // يمكنك إضافة تحقق للتأكد من صحة الرابط إن رغبت
+      contentFrame.src = url;
+    });
+  </script>
+</body>
+</html>
