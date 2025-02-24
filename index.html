@@ -1,35 +1,546 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>عرض المحتوى</title>
+  <title>محول تريكس الشامل</title>
+  <!-- أيقونة التطبيق -->
+  <link rel="icon" href="BĞCŞT.jpg">
+  <!-- إعداد manifest لتطبيق الويب -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="محول تريكس الشامل">
+  <!-- تضمين Bootstrap 5 وأيقونات FontAwesome -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <!-- أنماط مخصصة جديدة لتصميم عصري -->
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    input, button { padding: 10px; font-size: 1rem; }
-    iframe { margin-top: 20px; border: 1px solid #ccc; }
+    /* تصميم خلفية متدرج وخطوط أنيقة */
+    body {
+      background: linear-gradient(135deg, #74ABE2, #5563DE);
+      color: #222;
+      font-family: 'Cairo', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      transition: background 0.3s, color 0.3s;
+      padding: 20px;
+    }
+    body.dark {
+      background: #1c1c1c;
+      color: #eee;
+    }
+    .container {
+      max-width: 960px;
+      margin: auto;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 10px;
+      padding: 30px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.25);
+    }
+    body.dark .container {
+      background: #2a2a2a;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #007bff;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+    }
+    header h1 {
+      color: #007bff;
+      font-weight: bold;
+      margin: 0;
+    }
+    .btn-custom {
+      border-radius: 50px;
+      padding: 10px 16px;
+      font-size: 0.9rem;
+    }
+    /* تحسين المكونات داخل النماذج */
+    .form-control, .form-select, .form-range {
+      border: 2px solid #007bff;
+      border-radius: 5px;
+    }
+    pre {
+      background: #f8f9fa;
+      border: 1px solid #ddd;
+      padding: 15px;
+      border-radius: 5px;
+      overflow-x: auto;
+    }
+    footer {
+      margin-top: 30px;
+      font-size: 0.9rem;
+      color: #555;
+    }
+    /* تصميم أيقونات الأزرار داخل الهيدر */
+    .header-buttons button {
+      margin-left: 5px;
+    }
   </style>
 </head>
 <body>
-  <h1>عرض المحتوى من الرابط</h1>
-  <form id="linkForm">
-    <input type="url" id="urlInput" placeholder="أدخل رابط المحتوى هنا" required>
-    <button type="submit">عرض</button>
-  </form>
-
-  <iframe id="contentFrame" src="" width="640" height="360" frameborder="0" allowfullscreen></iframe>
-
+  <div class="container">
+    <!-- رأس الصفحة -->
+    <header>
+      <div class="d-flex align-items-center">
+        <img src="002.png" alt="شعار التطبيق" style="width:50px; height:50px; margin-left:10px;">
+        <h1>محول تريكس الشامل</h1>
+      </div>
+      <div class="header-buttons">
+        <button id="darkModeToggle" class="btn btn-secondary btn-custom" title="تبديل الوضع الداكن">
+          <i class="fas fa-moon"></i>
+        </button>
+        <button id="fullscreenBtn" class="btn btn-secondary btn-custom" title="إضافة إلى الشاشة الرئيسية">
+          <i class="fas fa-plus-square"></i>
+        </button>
+        <button id="settingsBtn" class="btn btn-secondary btn-custom" title="إعدادات التطبيق">
+          <i class="fas fa-cog"></i>
+        </button>
+        <button id="helpBtn" class="btn btn-info btn-custom" title="تعليمات الاستخدام">
+          <i class="fas fa-question-circle"></i>
+        </button>
+      </div>
+    </header>
+    
+    <!-- حقل الإدخال -->
+    <div class="mb-4">
+      <label for="inputText" class="form-label">النص الأصلي</label>
+      <textarea id="inputText" class="form-control" rows="5" placeholder="أدخل النص هنا..."></textarea>
+    </div>
+    
+    <!-- خيارات الترجمة -->
+    <div class="card mb-4">
+      <div class="card-body">
+         <h5 class="card-title">خيارات الترجمة</h5>
+         <div class="mb-3">
+           <div class="form-check form-check-inline">
+             <input class="form-check-input" type="radio" name="translationDirection" id="ltr" value="lettersToCodes" checked>
+             <label class="form-check-label" for="ltr">من الحروف إلى رموز تريكس</label>
+           </div>
+           <div class="form-check form-check-inline">
+             <input class="form-check-input" type="radio" name="translationDirection" id="rtl" value="codesToLetters">
+             <label class="form-check-label" for="rtl">من رموز تريكس إلى حروف</label>
+           </div>
+         </div>
+         <button id="exportHistoryBtn" class="btn btn-outline-primary btn-custom" title="تصدير سجل التحويلات">تصدير السجل</button>
+      </div>
+    </div>
+    
+    <!-- أزرار التحكم -->
+    <div class="d-flex justify-content-around mb-4">
+      <button id="clearBtn" class="btn btn-warning btn-custom"><i class="fas fa-eraser"></i> مسح الإدخال</button>
+      <button id="copyBtn" class="btn btn-success btn-custom"><i class="fas fa-copy"></i> نسخ الناتج</button>
+      <button id="downloadBtn" class="btn btn-info btn-custom"><i class="fas fa-download"></i> تنزيل الناتج</button>
+      <button id="resetBtn" class="btn btn-danger btn-custom"><i class="fas fa-sync"></i> إعادة تعيين</button>
+      <button id="showMappingBtn" class="btn btn-secondary btn-custom"><i class="fas fa-table"></i> عرض خريطة التحويل</button>
+    </div>
+    
+    <!-- عرض الناتج -->
+    <div class="card mb-4">
+      <div class="card-header">الناتج</div>
+      <div class="card-body">
+        <pre id="resultText" dir="ltr"></pre>
+      </div>
+    </div>
+    
+    <!-- سجل التحويلات -->
+    <div class="card mb-4">
+      <div class="card-header">سجل التحويلات</div>
+      <ul class="list-group list-group-flush" id="historyList"></ul>
+      <div class="card-body text-center">
+         <button id="clearHistoryBtn" class="btn btn-outline-secondary btn-custom">مسح السجل</button>
+      </div>
+    </div>
+    
+    <!-- التذييل -->
+    <footer class="text-center">
+      <p>صانع التطبيق: ابومحمدباقر العبدالرسولي</p>
+    </footer>
+  </div>
+  
+  <!-- نافذة الإعدادات -->
+  <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="settingsModalLabel">إعدادات التطبيق</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="إغلاق" onclick="updateSystemSettings()"></button>
+        </div>
+        <div class="modal-body">
+          <!-- إعدادات المظهر -->
+          <div class="mb-4">
+            <label for="fontSizeRange" class="form-label">حجم الخط: <span id="fontSizeValue">16</span>px</label>
+            <input type="range" class="form-range" min="12" max="32" value="16" id="fontSizeRange">
+          </div>
+          <div class="mb-4">
+            <label for="fontFamilySelect" class="form-label">نوع الخط:</label>
+            <select id="fontFamilySelect" class="form-select">
+              <option value="'Cairo', sans-serif" selected>Cairo</option>
+              <option value="'Arial', sans-serif">Arial</option>
+              <option value="'Tahoma', sans-serif">Tahoma</option>
+              <option value="'Courier New', monospace">Courier New</option>
+              <option value="'Times New Roman', serif">Times New Roman</option>
+              <option value="'Amiri', serif">Amiri</option>
+            </select>
+          </div>
+          <div class="mb-4">
+            <label for="lineHeightRange" class="form-label">تباعد الأسطر: <span id="lineHeightValue">1.6</span></label>
+            <input type="range" class="form-range" min="1" max="2" step="0.1" value="1.6" id="lineHeightRange">
+          </div>
+          <!-- تعديل ألوان التطبيق (متاح للجميع) -->
+          <div class="mb-4">
+            <h6>تعديل ألوان التطبيق</h6>
+            <div id="colorInputsContainer">
+              <div class="mb-2">
+                <label>لون الخلفية الرئيسية:</label>
+                <input type="color" id="mainBgColor" value="#f0f4f8" class="form-control form-control-color">
+              </div>
+              <div class="mb-2">
+                <label>لون الحاوية:</label>
+                <input type="color" id="containerBgColor" value="#ffffff" class="form-control form-control-color">
+              </div>
+              <div class="mb-2">
+                <label>لون النص:</label>
+                <input type="color" id="textColor" value="#333333" class="form-control form-control-color">
+              </div>
+              <div class="mb-2">
+                <label>لون التمييز:</label>
+                <input type="color" id="accentColor" value="#007bff" class="form-control form-control-color">
+              </div>
+              <div class="mb-2">
+                <label>نوع الخط المخصص:</label>
+                <input type="text" id="customFont" class="form-control" placeholder="مثلاً 'Cairo', sans-serif" value="'Cairo', sans-serif">
+              </div>
+              <div class="mb-2">
+                <label>تباعد الأسطر:</label>
+                <input type="number" id="customLineHeight" class="form-control" step="0.1" min="1" max="3" value="1.6">
+              </div>
+            </div>
+            <button id="applyColorsButton" class="btn btn-success btn-custom mt-2">تطبيق التغييرات</button>
+          </div>
+          <!-- معلومات النظام الثابت -->
+          <div class="mb-4">
+            <label class="form-label">نظام التحويل:</label>
+            <p class="form-control">Trix System (ثابت)</p>
+          </div>
+          <div class="mb-4">
+            <p class="small text-muted">تُطبَّق جميع الإعدادات فوراً وتُحفظ في المتصفح.</p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-custom" data-bs-dismiss="modal" onclick="updateSystemSettings()">حفظ التغييرات</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- نافذة التعليمات -->
+  <div class="modal fade" id="helpModal" tabindex="-1" aria-labelledby="helpModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="helpModalLabel">تعليمات الاستخدام بالتفصيل</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="إغلاق"></button>
+        </div>
+        <div class="modal-body">
+          <h6>مقدمة:</h6>
+          <p>
+            تم تطوير هذا التطبيق باستخدام نظام Trix System الثابت لتحويل النصوص. يمكنك تعديل المظهر بالكامل عبر الإعدادات (حجم الخط، نوع الخط، تباعد الأسطر وألوان التطبيق) وسيتم تطبيق التغييرات فوراً.
+          </p>
+          <h6>الخصائص الرئيسية:</h6>
+          <ul>
+            <li><strong>الترجمة التلقائية:</strong> يتم تحويل النص أثناء الكتابة بناءً على الاتجاه الذي تختاره.</li>
+            <li><strong>إعدادات المظهر:</strong> تعديل حجم الخط، نوع الخط وتباعد الأسطر ليظهر النص بالشكل المطلوب فور حفظ الإعدادات.</li>
+            <li><strong>تعديل الألوان:</strong> يمكنك تغيير ألوان الخلفية والحاوية والنص والتمييز بحرية.</li>
+            <li><strong>وظائف التنزيل والسجل:</strong> تنزيل الناتج بامتداد <code>.TRX</code> وتصدير سجل التحويل بامتداد <code>.TRXH</code>.</li>
+            <li><strong>خيارات إضافية:</strong> زر "ملء الشاشة" يعطي تعليمات لإضافة التطبيق إلى الشاشة الرئيسية.</li>
+          </ul>
+          <h6>كيفية الاستخدام:</h6>
+          <ul>
+            <li>أدخل النص في خانة "النص الأصلي".</li>
+            <li>اختر اتجاه الترجمة وسيتم التحويل تلقائياً.</li>
+            <li>استخدم أزرار التحكم (مسح، نسخ، تنزيل، إعادة تعيين) للتحكم بالمحتوى.</li>
+            <li>قم بتعديل الإعدادات والألوان من نافذة الإعدادات وسيتم حفظها فوراً.</li>
+            <li>انقر على "عرض خريطة التحويل" للاطلاع على جدول الرموز والحروف.</li>
+          </ul>
+          <p>
+            لأي استفسار أو مساعدة، يرجى التواصل مع صانع التطبيق.
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-custom" data-bs-dismiss="modal">إغلاق</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- نافذة خريطة التحويل -->
+  <div class="modal fade" id="mappingModal" tabindex="-1" aria-labelledby="mappingModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="mappingModalLabel">خريطة تحويل الحروف</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="إغلاق"></button>
+        </div>
+        <div class="modal-body">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>الحرف/الحركة</th>
+                <th>رمز تريكس</th>
+              </tr>
+            </thead>
+            <tbody id="mappingTable">
+              <!-- سيتم تعبئته عبر الجافاسكريبت -->
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-custom" data-bs-dismiss="modal">إغلاق</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- تضمين Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
   <script>
-    const form = document.getElementById('linkForm');
-    const urlInput = document.getElementById('urlInput');
-    const contentFrame = document.getElementById('contentFrame');
+    /**************** خريطة تحويل الحروف (Trix System) ****************/
+    const mappingTrixSuper = {
+      'ا': 'E', 'ب': 'L', 'پ': 'S', 'ج': 'Q', 'د': 'R', 'ه': 'X', 'و': 'W', 'ز': 'H',
+      'ح': 'N', 'ط': 'J', 'ي': 'C', 'ك': 'Ş', 'ل': 'Ō', 'م': 'Z', 'ن': 'V',
+      'س': 'T', 'ع': 'G', 'ف': 'Ç', 'ص': 'O', 'ق': 'M', 'ر': 'Ğ', 'ش': 'F',
+      'ت': 'B', 'ث': 'P', 'خ': 'U', 'ذ': 'A', 'ض': 'K', 'ظ': 'I', 'غ': 'Ā',
+      'ة': 'D', 'ى': 'Æ', 'ئ': 'Y', 'آ': 'Ẽ', 'ؤ': 'ẞ', 'أ': 'Ê', 'إ': 'Ě',
+      'Ț': 'چ', 'Ũ': 'گ', 'Į': 'ژ',
+      'ء': 'Ľ', 'ـ': '-', 'ٰ': '~', 'ٓ': '^', 'ٍ': 'Ď', 'َّ': 'ĘŠ',
+      // الحركات
+      'َ': 'Š', 'ً': 'Ś', 'ِ': 'Ș', 'ُ': 'Ċ', 'ٌ': 'Č', 'ْ': 'Ć', 'ّ': 'Ę'
+    };
 
-    form.addEventListener('submit', function(e) {
-      e.preventDefault();
-      const url = urlInput.value;
-      // يمكنك إضافة تحقق للتأكد من صحة الرابط إن رغبت
-      contentFrame.src = url;
+    function generateReverseMapping(mapObj) {
+      const reverse = {};
+      let maxLen = 0;
+      for (let char in mapObj) {
+        const code = mapObj[char];
+        reverse[code] = char;
+        if (code.length > maxLen) maxLen = code.length;
+      }
+      return { reverse, maxLen };
+    }
+    const { reverse: reverseMappingTrix, maxLen: maxCodeLengthTrix } = generateReverseMapping(mappingTrixSuper);
+    
+    function getActiveMapping() {
+      return { mapping: mappingTrixSuper, reverseMapping: reverseMappingTrix, maxCodeLength: maxCodeLengthTrix };
+    }
+    
+    /**************** الترجمة مع خاصية debounce ****************/
+    let debounceTimer;
+    function translateText() {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        const { mapping, reverseMapping, maxCodeLength } = getActiveMapping();
+        const inputElem = document.getElementById("inputText");
+        const input = inputElem.value;
+        let output = "";
+        const direction = document.querySelector('input[name="translationDirection"]:checked').value;
+        
+        if(direction === "lettersToCodes") {
+          for(let char of input) {
+            output += mapping[char] ? mapping[char] : char;
+          }
+        } else {
+          let idx = 0;
+          while(idx < input.length) {
+            let found = false;
+            for(let len = maxCodeLength; len > 0; len--) {
+              const substr = input.substr(idx, len);
+              if(reverseMapping.hasOwnProperty(substr)) {
+                output += reverseMapping[substr];
+                idx += len;
+                found = true;
+                break;
+              }
+            }
+            if(!found) { output += input[idx]; idx++; }
+          }
+        }
+        document.getElementById("resultText").dir = "ltr";
+        document.getElementById("resultText").innerText = output;
+        addToHistory("الترجمة", output);
+      }, 300);
+    }
+    
+    /**************** ضبط اتجاه الإدخال ****************/
+    document.getElementById("inputText").addEventListener("input", function() {
+      const value = this.value.trim();
+      this.dir = (/^[0-9\s]+$/.test(value) && value.length > 0) ? "ltr" : "rtl";
+      translateText();
     });
+    
+    /**************** سجل التحويلات ****************/
+    function addToHistory(action, result) {
+      const history = JSON.parse(localStorage.getItem("conversionHistory")) || [];
+      const entry = { time: new Date().toLocaleTimeString(), action, result };
+      history.unshift(entry);
+      localStorage.setItem("conversionHistory", JSON.stringify(history));
+      renderHistory();
+    }
+    function renderHistory() {
+      const history = JSON.parse(localStorage.getItem("conversionHistory")) || [];
+      const historyList = document.getElementById("historyList");
+      historyList.innerHTML = "";
+      history.forEach(entry => {
+        const li = document.createElement("li");
+        li.className = "list-group-item";
+        li.innerText = `[${entry.time}] ${entry.action}: ${entry.result}`;
+        historyList.appendChild(li);
+      });
+    }
+    function clearHistory() {
+      localStorage.removeItem("conversionHistory");
+      renderHistory();
+    }
+    function exportHistory() {
+      const history = localStorage.getItem("conversionHistory") || "[]";
+      const blob = new Blob([history], { type: "text/plain;charset=utf-8" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "سجل_التحويل.TRXH";
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+    
+    /**************** وظائف التحكم ****************/
+    function clearText() {
+      document.getElementById("inputText").value = "";
+      document.getElementById("resultText").innerText = "";
+    }
+    function copyResult() {
+      const result = document.getElementById("resultText").innerText;
+      navigator.clipboard.writeText(result)
+        .then(() => alert("تم نسخ الناتج بنجاح!"))
+        .catch(() => alert("فشل النسخ."));
+    }
+    function downloadResult() {
+      const result = document.getElementById("resultText").innerText;
+      const blob = new Blob([result], { type: "text/plain;charset=utf-8" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "النتيجة.TRX";
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+    function resetSettings() {
+      document.getElementById("inputText").value = "";
+      document.getElementById("resultText").innerText = "";
+      localStorage.removeItem("conversionHistory");
+      renderHistory();
+      translateText();
+    }
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark");
+      localStorage.setItem("darkMode", document.body.classList.contains("dark"));
+    }
+    function toggleFullscreen() {
+      alert("لإضافة التطبيق إلى الشاشة الرئيسية:\n1. اضغط على زر المشاركة في متصفح سفاري.\n2. اختر 'أضف إلى الشاشة الرئيسية'.\n3. استخدم شعار التطبيق (002.png) كأيقونة.");
+    }
+    
+    /**************** تحديث إعدادات النظام ****************/
+    function updateSystemSettings() {
+      const fontSize = document.getElementById("fontSizeRange").value;
+      const fontFamily = document.getElementById("fontFamilySelect").value;
+      const lineHeight = document.getElementById("lineHeightRange").value;
+      document.documentElement.style.setProperty("--custom-font-size", fontSize + "px");
+      document.documentElement.style.setProperty("--font-family", fontFamily);
+      document.documentElement.style.setProperty("--line-height", lineHeight);
+      localStorage.setItem("fontSize", fontSize);
+      localStorage.setItem("fontFamily", fontFamily);
+      localStorage.setItem("lineHeight", lineHeight);
+      document.getElementById("fontSizeValue").innerText = fontSize;
+      document.getElementById("lineHeightValue").innerText = lineHeight;
+    }
+    
+    /**************** تعديل الألوان المخصصة ****************/
+    function applyCustomColors() {
+      if(document.getElementById("mainBgColor"))
+        document.documentElement.style.setProperty("--main-bg", document.getElementById("mainBgColor").value);
+      if(document.getElementById("containerBgColor"))
+        document.documentElement.style.setProperty("--container-bg", document.getElementById("containerBgColor").value);
+      if(document.getElementById("textColor"))
+        document.documentElement.style.setProperty("--text-color", document.getElementById("textColor").value);
+      if(document.getElementById("accentColor"))
+        document.documentElement.style.setProperty("--accent-color", document.getElementById("accentColor").value);
+      if(document.getElementById("customFont")) {
+        const fontVal = document.getElementById("customFont").value;
+        if(fontVal.trim() !== "")
+          document.documentElement.style.setProperty("--font-family", fontVal);
+      }
+      if(document.getElementById("customLineHeight"))
+        document.documentElement.style.setProperty("--line-height", document.getElementById("customLineHeight").value);
+      alert("تم تحديث ألوان التطبيق بنجاح!");
+    }
+    
+    /**************** تسجيل الأحداث ****************/
+    document.getElementById("clearBtn").addEventListener("click", clearText);
+    document.getElementById("copyBtn").addEventListener("click", copyResult);
+    document.getElementById("downloadBtn").addEventListener("click", downloadResult);
+    document.getElementById("resetBtn").addEventListener("click", resetSettings);
+    document.getElementById("clearHistoryBtn").addEventListener("click", clearHistory);
+    document.getElementById("exportHistoryBtn").addEventListener("click", exportHistory);
+    document.getElementById("darkModeToggle").addEventListener("click", toggleDarkMode);
+    document.getElementById("fullscreenBtn").addEventListener("click", toggleFullscreen);
+    document.getElementById("helpBtn").addEventListener("click", () => {
+      new bootstrap.Modal(document.getElementById("helpModal")).show();
+    });
+    document.getElementById("settingsBtn").addEventListener("click", () => {
+      new bootstrap.Modal(document.getElementById("settingsModal")).show();
+    });
+    document.getElementById("applyColorsButton").addEventListener("click", applyCustomColors);
+    document.getElementById("showMappingBtn").addEventListener("click", () => {
+      const tableBody = document.getElementById("mappingTable");
+      tableBody.innerHTML = "";
+      for(let key in mappingTrixSuper) {
+        const tr = document.createElement("tr");
+        const tdLetter = document.createElement("td");
+        tdLetter.innerText = key;
+        const tdCode = document.createElement("td");
+        tdCode.innerText = mappingTrixSuper[key];
+        tr.appendChild(tdLetter);
+        tr.appendChild(tdCode);
+        tableBody.appendChild(tr);
+      }
+      new bootstrap.Modal(document.getElementById("mappingModal")).show();
+    });
+    
+    /**************** تهيئة الإعدادات عند التحميل ****************/
+    window.addEventListener("load", () => {
+      if(localStorage.getItem("darkMode") === "true") {
+        document.body.classList.add("dark");
+      }
+      const savedFontSize = localStorage.getItem("fontSize") || "16";
+      const savedFontFamily = localStorage.getItem("fontFamily") || "'Cairo', sans-serif";
+      const savedLineHeight = localStorage.getItem("lineHeight") || "1.6";
+      document.getElementById("fontSizeRange").value = savedFontSize;
+      document.getElementById("fontFamilySelect").value = savedFontFamily;
+      document.getElementById("lineHeightRange").value = savedLineHeight;
+      document.getElementById("fontSizeValue").innerText = savedFontSize;
+      document.getElementById("lineHeightValue").innerText = savedLineHeight;
+      renderHistory();
+      translateText();
+    });
+    
+    /**************** تسجيل Service Worker ****************/
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js')
+        .then(registration => console.log('Service Worker مسجل بنطاق:', registration.scope))
+        .catch(error => console.log('فشل تسجيل Service Worker:', error));
+    }
   </script>
 </body>
 </html>
